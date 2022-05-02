@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <link rel="stylesheet" href="static/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body style="background-color: rgba(0, 0, 0, 0.9)">
+    <div class="container-fluid">
+      <div class="main">
+        <div id="form" class="input-container">
+          <buton id="close-form" class="close-btn">
+            <i class="fa-solid fa-x"></i>
+          </buton>
+          <form method="POST">
+            <div id="message" class="message alert alert-danger"></div>
+            <div class="form-group mb-2">
+              <label for="title">Title</label>
+              <input
+                type="Title"
+                class="form-control"
+                id="title"
+                placeholder="Title"
+                name="title"
+              />
+            </div>
+            <div class="form-group">
+              <label for="content">Content</label>
+              <textarea
+                class="form-control"
+                id="content"
+                rows="3"
+                name="content"
+                placeholder="Content"
+              ></textarea>
+            </div>
+            <div class="d-flex align-items-center justify-content-center">
+              <button type="submit" class="btn btn btn-success mt-2">
+                Add
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="contain">
+          <div
+            class="header mb-4 mt-2 d-flex align-items-center justify-content-center"
+          >
+            <button
+              id="open-form"
+              style="font-size: 18px"
+              class="btn btn-sm btn-danger"
+            >
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+          <div
+            id="message-header"
+            class="message-header alert alert-success"
+          ></div>
+          <div class="todo-list">
+            <div id="loader" class="loader"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      $(document).ready(() => {
+        $("#form").fadeOut();
+        $("#message").fadeOut();
+        $.ajax({
+          type: "GET",
+          url: "get_todos.php",
+          dataType: "JSON",
+          beforeSend: function () {
+            $("#loader").fadeIn();
+          },
+          error: function (a, b, c) {
+            $("#loader").fadeOut();
+            $("#message-header").empty();
+            $("#message-header").append(c);
+            $("#message-header").fadeIn();
+          },
+          success: function (res) {
+            $("#loader").fadeOut();
+            if (res.todos.length > 0) {
+              renderData(res.todos);
+            }
+            $("#message-header").empty();
+            $("#message-header").append(res.msg);
+            $("#message-header").fadeIn();
+          },
+        });
+      });
+
+      const renderData = (data) => {
+        $(".todo-list").empty();
+        data.forEach(function (d) {
+          console.log(data.length);
+          $(".todo-list").append(`
+            <div class="todo">
+              <span style="display: none">${d.id}</span>
+              <span class="stamp bg-info">Created at: ${d.created_at}</span>
+              <h5 class="title">${d.title}</h5>
+              <p class="content">
+                ${d.content}
+              </p>
+            </div>
+          `);
+        });
+      };
+
+      $("#open-form").click(() => {
+        $("#form").fadeIn();
+      });
+
+      $("#close-form").click(() => {
+        $("#form").fadeOut();
+      });
+
+      $("form").submit(function (e) {
+        e.preventDefault();
+        $data = $("form").serializeArray();
+        $.ajax({
+          type: "POST",
+          url: "add_todo.php",
+          data: $data,
+          dataType: "JSON",
+          beforeSend: function () {
+            $("#message").empty();
+            $("#message").append("Request sending...");
+            $("#message").fadeIn();
+          },
+          error: function (a, b, c) {
+            $("#message").empty();
+            $("#message").append(c);
+            $("#message").fadeIn();
+          },
+          success: function (res) {
+            if (res.todos.length > 0) {
+              $("#message").empty();
+              $("#message").fadeOut();
+              $("#form").fadeOut();
+              $("#message-header").empty();
+              $("#message-header").append(res.msg);
+              $("#message-header").fadeIn();
+              renderData(res.todos);
+              $("input").val('');
+            } else {
+              $("#message").empty();
+              $("#message").append(res.msg);
+              $("#message").fadeIn();
+            }
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

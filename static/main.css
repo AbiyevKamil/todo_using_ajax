@@ -1,0 +1,88 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+}
+
+p {
+  margin: 0;
+}
+
+.input-container {
+  display: none;
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.input-container form {
+  min-width: 450px;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 30px 20px;
+}
+
+.contain {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.todo {
+  position: relative;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+  min-width: 90vw;
+}
+
+.close-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.stamp {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  padding: 5px;
+}
+
+.message-header {
+  display: none;
+}
+
+.loader {
+  display: none;
+  margin: 10px auto;
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
