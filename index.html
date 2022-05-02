@@ -115,8 +115,10 @@
           },
           success: function (res) {
             $("#loader").fadeOut();
-            if (res.todos.length > 0) {
-              renderData(res.todos);
+            if (res.status == 1) {
+              if (res.todos.length > 0) {
+                renderData(res.todos);
+              }
             }
             $("#message-header").empty();
             $("#message-header").append(res.msg);
@@ -169,15 +171,18 @@
             $("#message").fadeIn();
           },
           success: function (res) {
-            if (res.todos.length > 0) {
+            if (res.status == 1) {
               $("#message").empty();
               $("#message").fadeOut();
               $("#form").fadeOut();
               $("#message-header").empty();
               $("#message-header").append(res.msg);
               $("#message-header").fadeIn();
-              renderData(res.todos);
-              $("input").val('');
+              $("#title").val("");
+              $("#content").val("");
+              if (res.todos.length > 0) {
+                renderData(res.todos);
+              }
             } else {
               $("#message").empty();
               $("#message").append(res.msg);

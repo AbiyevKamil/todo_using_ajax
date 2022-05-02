@@ -3,6 +3,7 @@ include "/AppServ/www/task/config/db.php";
 
 if (!$connection) {
   echo json_encode(array(
+    "status" => 0,
     "msg" => "Couldn't connect to database.",
     "todos" => array()
   ));
@@ -21,23 +22,27 @@ if (!$connection) {
           array_push($todos, $todo);
         }
         echo json_encode(array(
+          "status" => 1,
           "msg" => "Successfully added.",
           "todos" => $todos
         ));
       } else {
         echo json_encode(array(
+          "status" => 0,
           "msg" => "Oops, something went wrong.",
           "todos" => array()
         ));
       }
     } else {
       echo json_encode(array(
+        "status" => 0,
         "msg" => "Title and content is required.",
         "todos" => array()
       ));
     }
   } else {
     echo json_encode(array(
+      "status" => 0,
       "msg" => "Request method is not valid",
       "todos" => array()
     ));
