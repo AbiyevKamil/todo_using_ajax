@@ -99,7 +99,7 @@
     <script>
       $(document).ready(() => {
         $("#form").fadeOut();
-        $("#message").fadeOut();
+        $("#message").slideUp();
         $.ajax({
           type: "GET",
           url: "get_todos.php",
@@ -163,17 +163,17 @@
           beforeSend: function () {
             $("#message").empty();
             $("#message").append("Request sending...");
-            $("#message").fadeIn();
+            $("#message").slideDown();
           },
           error: function (a, b, c) {
             $("#message").empty();
             $("#message").append(c);
-            $("#message").fadeIn();
+            $("#message").slideDown();
           },
           success: function (res) {
             if (res.status == 1) {
               $("#message").empty();
-              $("#message").fadeOut();
+              $("#message").slideUp();
               $("#form").fadeOut();
               $("#message-header").empty();
               $("#message-header").append(res.msg);
@@ -186,7 +186,7 @@
             } else {
               $("#message").empty();
               $("#message").append(res.msg);
-              $("#message").fadeIn();
+              $("#message").slideDown();
             }
           },
         });
